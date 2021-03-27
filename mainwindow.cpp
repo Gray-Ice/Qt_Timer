@@ -11,14 +11,18 @@ MainWindow::MainWindow(QWidget *parent)
       seconds(0)
 {
     ui->setupUi(this);
+    setWindowTitle("Timer");
     connect(ui->startButton, &QPushButton::clicked, this, &MainWindow::on_pushButton_clicked);
     qtmer_p = new QTimer(this);
     qtmer_p -> setInterval(1000);
+    // connect timer and timeout slot
+    connect(qtmer_p, &QTimer::timeout, this, &MainWindow::time_out);
     // add about button
     QAction* about = ui->menubar ->addAction("About");
     connect(about, &QAction::triggered, [=](){
        QMessageBox::aboutQt(ui->menubar, "AboutQt");
     });
+    connect(this, &MainWindow::doIt, ui->menuSettings, &SettingMenu::timeOver);
 }
 
 MainWindow::~MainWindow()
@@ -33,7 +37,6 @@ void MainWindow::on_pushButton_clicked()
     // this variable let the function knows if the user want to start
     // counter or not.
     static bool status = true;
-    connect(qtmer_p, &QTimer::timeout, this, &MainWindow::time_out);
     if(status)
     {
 
@@ -67,9 +70,6 @@ void MainWindow::on_pushButton_clicked()
         // stop counter
         qtmer_p->stop();
         // make a new counter
-        delete qtmer_p;
-        qtmer_p = new QTimer;
-        qtmer_p->setInterval(1000);
         // reset time values
         minutes = 0;
         seconds = 0;
@@ -101,6 +101,7 @@ void MainWindow::time_out()
     }
     if(minutes == u_m && u_m != 0)
     {
+        emit MainWindow::doIt();
         emit MainWindow::on_pushButton_clicked();
     }
 }

@@ -112,8 +112,21 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="SettingMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+   </widget>
+   <addaction name="menuSettings"/>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>SettingMenu</class>
+   <extends>QMenu</extends>
+   <header>settingmenu.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
